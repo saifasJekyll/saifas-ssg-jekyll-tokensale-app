@@ -3,6 +3,7 @@ email: jekyll@saifas.info
 description: ICO Saifas Tokensale Website
 baseurl: ""
 url: ""
+tokensale_title: ICO
 
 plugins:
   - jekyll-feed
@@ -15,3 +16,9 @@ source: ./
 destination: ../app-build-static
 
 layouts_dir: ./templates/_layouts/
+
+defaults:
+  - scope:
+      path: "assets/img"
+    values:
+      image: true

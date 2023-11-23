@@ -2,4 +2,17 @@
 layout: home
 title: ICO Tokensale
 permalink: /index.html
+steps:
+  - title: "Enter your account"
+    id: 1
+    content: "Content 1"
+  - title: "Step 2"
+    id: 2
+    content: "Content 2"
+  - title: "Step 3"
+    id: 3
+    content: "Content 3"
+  - title: "Step 4"
+    id: 4
+    content: "Content 4"
 ---

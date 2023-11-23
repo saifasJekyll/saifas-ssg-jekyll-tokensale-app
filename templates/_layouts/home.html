@@ -1,11 +1,259 @@
 <!DOCTYPE html>
 <html lang="{{ page.lang | default: site.lang | default: "en" }}">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap">
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Playfair Display', serif;
+        background-image: url('{{ site.baseurl }}/assets/graphics/images/background.svg');
+        background-size: cover;
+        background-position: center;
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 0 20px;
+      }
 
-  <title>
-    {{ page.title }}
-  </title>
+      header {
+        padding: 10px;
+        text-align: center;
+      }
+
+      main {
+        width: 100%;
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        padding: 0 20px;
+      }
+
+      .steps {
+        position: relative;
+        width: 100%;
+        max-width: 500px;
+        border-radius: 15px;
+        background-color: #111e3bbf;
+        backdrop-filter: blur(5px);
+        padding: 20px;
+        box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
+        box-sizing: border-box;
+        z-index: 1;
+      }
+
+      .steps-header {
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 24px;
+      }
+
+      .steps-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .step {
+        display: none;
+      }
+
+      .step.active {
+        display: block;
+      }
+
+      .steps-navigation {
+        margin-top: 20px;
+        display: flex;
+        justify-content: center;
+      }
+
+      .backButton {
+        background: rgba(97,169,252,.1);
+        border: none;
+        border-radius: 50px;
+        color: var(--white);
+        cursor: pointer;
+        display: inline-block;
+        font-family: "Work Sans",sans-serif;
+        font-size: 18px;
+        font-weight: 800;
+        line-height: 1em;
+        padding: 14px 38px;
+        text-align: center;
+        text-decoration: none;
+        text-transform: uppercase;
+        transition-duration: .3s;
+        max-width: 178px;
+        margin-right: 20px;
+      }
+
+      .backButton:hover {
+        transform: scale(1.015);
+        background: rgba(97,169,252,.2);
+      }
+
+      .nextButton {
+        background: linear-gradient(35Deg,#61a9fc,#315bce);
+        box-shadow: 0px 0px 40px rgba(97,169,252,.2);
+        border: none;
+        border-radius: 50px;
+        color: #FFF;
+        cursor: pointer;
+        display: inline-block;
+        font-family: "Work Sans",sans-serif;
+        font-size: 18px;
+        font-weight: 800;
+        line-height: 1em;
+        padding: 14px 38px;
+        text-align: center;
+        text-decoration: none;
+        text-transform: uppercase;
+        transition-duration: .3s;
+        max-width: 178px;
+      }
+
+      .nextButton:hover {
+        box-shadow: 0px 0px 60px rgba(97,169,252,.5);
+        transform: scale(1.015);
+      }
+
+      .glow-back:hover {
+        border: 5px solid rgba(97,169,252,.5);
+        transition: .5s;
+      }
+
+      .glow-back {
+        border: 0px solid rgba(97,169,252,.5);
+        transition: .5s;
+      }
+
+      .steps-header-dots {
+        display: flex;
+        width: 100%;
+        justify-content: center;
+        flex-direction: row;
+      }
+
+      .dot {
+        background: linear-gradient(35Deg,#61a9fc,#315bce);
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        margin-right: 10px;
+        transition: .4s;
+      }
+
+      .dot--active {
+        scale: 1.3;
+        box-shadow: 0px 0px 60px rgba(97,169,252,.5);
+        transition: .4s;
+      }
+
+      .logic-steps {
+        display: none;
+      }
+
+      .step-input {
+        background-color: rgba(97,169,252,.07);
+        border: none;
+        border-radius: 12px;
+        box-sizing: border-box;
+        color: #FFF;
+        font-family: "Work Sans",sans-serif;
+        padding: 16px 12px;
+        text-align: center;
+        width: 100%;
+        outline: none;
+        color: #61a9fc;
+      }
+
+      .step-input::placeholder {
+        color: #61a9fc;
+        opacity: .5;
+      }
+
+    </style>
+  </head>
+
+  <script>
+    let currentStep = 1;
+    
+    function showStep(step) {
+      document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
+      document.querySelector(`.step:nth-child(${step})`).classList.add('active');
+      document.querySelector('.current-step').innerText = step;
+
+      const prevBtn = document.getElementById('prevBtn');
+      if (step === 1) {
+        prevBtn.style.display = 'none';
+      } else {
+        prevBtn.style.display = 'inline-block';
+      }
+    }
+
+    function prevStep() {
+      if (currentStep > 1) {
+        currentStep--;
+        showStep(currentStep);
+        document.querySelector(`.dot:nth-child(${currentStep + 1})`).classList.remove('dot--active');
+      }
+    }
+
+    function nextStep() {
+      if (currentStep < {{ page.steps | size }}) {
+        currentStep++;
+        showStep(currentStep);
+        document.querySelector(`.dot:nth-child(${currentStep})`).classList.add('dot--active');
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+      showStep(currentStep);
+    });
+  </script>
 
   <body>
+    <header>
+      <h1>
+        {{ site.tokensale_title | default: "Saifas" }} Tokensale
+      </h1>
+    </header>
+    <main>
+      <div class="steps glow-back">
+        <div class="steps-header">
+          <div class="steps-header-dots">
+            {% for step in page.steps %}
+              <div class="dot {% if step.id == 1 %} dot--active{% endif %}">
+              </div>
+            {% endfor %}
+          </div>
+          <p class="logic-steps">Step <span class="current-step">1</span> from {{ page.steps | size }}</p>
+        </div>
+        <div class="steps-content">
+          {% for step in page.steps %}
+            <div class="step">
+              <h2>{{ step.title }}</h2>
+              {% if step.id == 1 %}
+              <input class="step-input" placeholder="Account name">
+              {% endif %}
+            </div>
+          {% endfor %}
+        </div>
+        <div class="steps-navigation">
+          <button id="prevBtn" onclick="prevStep()" class="backButton">Back</button>
+          <button onclick="nextStep()" class="nextButton">Next</button>
+        </div>
+      </div>
+    </main>
   </body>
-
 </html>
+
