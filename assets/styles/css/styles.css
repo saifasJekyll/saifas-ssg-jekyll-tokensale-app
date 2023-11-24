@@ -176,12 +176,17 @@ main {
 }
 
 
-.payment-method-block {
+.payment-method-block, .finalise-purchase-block {
   margin: 20px 0;
   background-color: rgba(94,104,157, 0.2);
   border-radius: 15px;
   padding: 20px;
   width: auto;
+}
+
+.finalise-purchase-block {
+  font-family: "Work Sans", sans-serif;
+  padding-top: 10px;
 }
 
 .token-selector {

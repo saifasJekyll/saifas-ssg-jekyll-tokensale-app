@@ -25,3 +25,6 @@ defaults:
       path: "assets/img"
     values:
       image: true
+
+eos_address: eosaddress
+btc_address: 1flhfbT1PpqaDhFkEFWEf8WUSupnV0y2wP
