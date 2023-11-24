@@ -6,7 +6,7 @@ steps:
   - title: "Enter your account"
     id: 1
     content: "Content 1"
-  - title: "Step 2"
+  - title: "Purchase Tokens"
     id: 2
     content: "Content 2"
   - title: "Step 3"

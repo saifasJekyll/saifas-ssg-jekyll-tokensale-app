@@ -1,0 +1,46 @@
+<!-- To define attributes in js code -->
+<div id="steps" data-steps="{{ page.steps | size }}"></div>
+<!--  -->
+<div class="steps glow-back">
+  <div class="steps-header">
+    {% for step in page.steps %}
+      <div>{{ step.subtitle }}</div>
+    {% endfor %}
+    <div class="steps-header-dots">
+      {% for step in page.steps %}
+        <div class="dot {% if step.id == 1 %} dot--active{% endif %}">
+        </div>
+      {% endfor %}
+    </div>
+    <p class="logic-steps">Step <span class="current-step">1</span> from {{ page.steps | size }}</p>
+  </div>
+  <div class="steps-content">
+    {% for step in page.steps %}
+      <div class="step">
+        <h2 style="margin-top: 0;">{{ step.title }}</h2>
+        {% if step.id == 1 %}
+        <input class="step-input" placeholder="Account name">
+        {% elsif step.id == 2 %}
+        <div class="payment-method-block">
+          <h4 style="margin-top: 0; margin-bottom: 10px; font-family: 'Work Sans', sans-serif;">Payment method</h4>
+          <div style="font-size: 14px; margin-bottom: 20px; font-family: 'Work Sans', sans-serif;">Select how you would like to buy token</div>
+          <div class="token-selector">
+            <button class="token-btn token-btn--active" style="margin-bottom: 20px;" data-token="eos" onclick="selectToken('eos')">
+              <img width="28px" height="28px" src="assets/graphics/images/eos-icon.png" alt="EOS Icon">
+              EOS
+            </button>
+            <button class="token-btn" data-token="btc" onclick="selectToken('btc')">
+              <img width="28px" height="28px" src="assets/graphics/images/btc-icon.png" alt="BTC Icon">
+              BTC
+            </button>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+  <div class="steps-navigation">
+    <button id="prevBtn" onclick="prevStep()" class="backButton">Back</button>
+    <button onclick="nextStep()" class="nextButton">Next</button>
+  </div>
+</div>

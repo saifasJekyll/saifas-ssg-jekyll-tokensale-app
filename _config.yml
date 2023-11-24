@@ -11,6 +11,9 @@ plugins:
 contents_root_path: /contents/
 contents_pages_path: /contents/pages/
 
+assets_root_path: ./assets/
+assets_styles_path: ./assets/styles/css/styles.css
+
 source: ./
 
 destination: ../app-build-static
