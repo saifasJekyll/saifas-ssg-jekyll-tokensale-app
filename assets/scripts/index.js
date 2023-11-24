@@ -44,3 +44,18 @@ function selectToken(token) {
   
   console.log(`Selected token: ${token}`);
 }
+
+function convertTokens() {
+  const input = document.getElementById('tokenAmount').value;
+
+  const btcRate = 0.000037663;
+  const eosRate = 0.42
+
+  const eosResult = input * eosRate;
+  const btcResult = input * btcRate;
+  const usdResult = input * 1
+
+  document.getElementById('eosResult').innerText = eosResult;
+  document.getElementById('btcResult').innerText = btcResult;
+  document.getElementById('usdResult').innerText = usdResult;
+}

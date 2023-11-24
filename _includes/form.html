@@ -17,7 +17,9 @@
   <div class="steps-content">
     {% for step in page.steps %}
       <div class="step">
+        {% unless step.title == "" %}
         <h2 style="margin-top: 0;">{{ step.title }}</h2>
+        {% endunless %}
         {% if step.id == 1 %}
         <input class="step-input" placeholder="Account name">
         {% elsif step.id == 2 %}
@@ -34,6 +36,21 @@
               BTC
             </button>
           </div>
+        </div>
+        {% elsif step.id == 3 %}
+        <!-- Dummy data -->
+        <div class="big-amount">77,777.777</div>
+        <!--  -->
+        <div style="font-size: 14px; margin-bottom: 20px; margin-top: 10px; font-family: 'Work Sans', sans-serif;">Remaining Tokens available</div>
+        <h2 style="margin-top: 0; margin-bottom: 10px; font-family: 'Work Sans', sans-serif;">Choose Amount</h2>
+        <div style="font-size: 12px; margin-bottom: 20px; margin-top: 10px; font-family: 'Work Sans', sans-serif;">Type in the amount of token you would like to buy. The value of EOS, BTC and USD will dynamically be updated.</div>
+        <input class="step-input" id="tokenAmount" oninput="convertTokens()" placeholder="Enter amount">
+        <div class="tokens-rates-block">
+          <p>EOS: <span id="eosResult">0</span></p>
+          <div class="separator">|</div>
+          <p>BTC: <span id="btcResult">0</span></p>
+          <div class="separator">|</div>
+          <p>USD: <span id="usdResult">0</span></p>
         </div>
         {% endif %}
       </div>

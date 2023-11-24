@@ -9,7 +9,7 @@ steps:
   - title: "Purchase Tokens"
     id: 2
     content: "Content 2"
-  - title: "Step 3"
+  - title: ""
     id: 3
     content: "Content 3"
   - title: "Step 4"

@@ -220,3 +220,23 @@ main {
 .token-btn--active {
   opacity: 1;
 }
+
+.big-amount {
+  font-size: 40px;
+  font-weight: 300;
+  margin: 0;
+  font-family: "Work Sans", sans-serif;
+}
+
+.tokens-rates-block {
+  font-family: "Work Sans", sans-serif;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.separator {
+  display: flex;
+  align-items: center;
+  margin: 0 10px;
+}
