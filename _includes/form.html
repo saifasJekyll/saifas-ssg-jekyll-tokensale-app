@@ -1,11 +1,11 @@
 <!-- To define attributes in js code -->
 <div id="steps" data-steps="{{ page.steps | size }}"></div>
 <!--  -->
+<!-- To define payment methods in js code -->
+<div id="payment-methods" style="display: none;" data-methods='{{ site.data.payment-methods | jsonify }}'></div>
+<!--  -->
 <div class="steps glow-back">
   <div class="steps-header">
-    {% for step in page.steps %}
-      <div>{{ step.subtitle }}</div>
-    {% endfor %}
     <div class="steps-header-dots">
       {% for step in page.steps %}
         <div class="dot {% if step.id == 1 %} dot--active{% endif %}">
@@ -24,80 +24,39 @@
         <input class="step-input" id="accountName" placeholder="Account name">
         {% elsif step.id == 2 %}
         <div class="payment-method-block">
-          <h4 style="margin-top: 0; margin-bottom: 10px; font-family: 'Work Sans', sans-serif;">Payment method</h4>
-          <div style="font-size: 14px; margin-bottom: 20px; font-family: 'Work Sans', sans-serif;">Select how you would like to buy token</div>
-          <div class="token-selector">
-            <button class="token-btn token-btn--active" style="margin-bottom: 20px;" data-token="eos" onclick="selectToken('eos')">
-              <img width="28px" height="28px" src="assets/graphics/images/eos-icon.png" alt="EOS Icon">
-              EOS
+          <h4 style="margin-top: 0; margin-bottom: 10px; font-family: 'Work Sans', sans-serif;">{{ step.subtitle }}</h4>
+          <div style="font-size: 14px; margin-bottom: 20px; font-family: 'Work Sans', sans-serif;">{{ step.description }}</div>
+          {% for method in site.data.payment-methods %}
+            <button class="token-btn token-btn" style="margin-bottom: 20px; color: #FFF;" data-token="{{method.name}}" onclick="selectToken('{{method.name}}')">
+              <img width="28px" height="28px" src="{{method.icon_url}}" alt="{{method.name}} Icon">
+              {{ method.name }}
             </button>
-            <button class="token-btn" data-token="btc" onclick="selectToken('btc')">
-              <img width="28px" height="28px" src="assets/graphics/images/btc-icon.png" alt="BTC Icon">
-              BTC
-            </button>
-          </div>
+          {% endfor %}
         </div>
         {% elsif step.id == 3 %}
         <!-- Dummy data -->
         <div class="big-amount">77,777.777</div>
         <!--  -->
-        <div style="font-size: 14px; margin-bottom: 20px; margin-top: 10px; font-family: 'Work Sans', sans-serif;">Remaining Tokens available</div>
-        <h2 style="margin-top: 0; margin-bottom: 10px; font-family: 'Work Sans', sans-serif;">Choose Amount</h2>
-        <div style="font-size: 12px; margin-bottom: 20px; margin-top: 10px; font-family: 'Work Sans', sans-serif;">Type in the amount of token you would like to buy. The value of EOS, BTC and USD will dynamically be updated.</div>
+        <div style="font-size: 14px; margin-bottom: 20px; margin-top: 10px; font-family: 'Work Sans', sans-serif;">{{ step.description1 }}</div>
+        <h2 style="margin-top: 0; margin-bottom: 10px; font-family: 'Work Sans', sans-serif;">{{ step.subtitle }}</h2>
+        <div style="font-size: 12px; margin-bottom: 20px; margin-top: 10px; font-family: 'Work Sans', sans-serif;">{{ step.description2 }}</div>
         <input class="step-input" id="tokenAmount" oninput="convertTokens()" placeholder="Enter amount">
         <div class="tokens-rates-block">
-          <p>EOS: <span id="eosResult">0</span></p>
+          {% for method in site.data.payment-methods %}
+          <p>{{method.name}}: <span id="{{method.name}}Result">0</span></p>
           <div class="separator">|</div>
-          <p>BTC: <span id="btcResult">0</span></p>
-          <div class="separator">|</div>
+          {% endfor %}
           <p>USD: <span id="usdResult">0</span></p>
         </div>
         {% elsif step.id == 4 %}
         <div style="font-size: 14px; font-family: 'Work Sans', sans-serif; display: flex; align-items: center; flex-direction: row; margin-bottom: 20px; margin-top: 10px;">
           <div>To buy</div>
           <div id="usdAmount" style="margin: 0 4px;"></div>
-          <div>transfer to exact amount of</div>
+          <div>tokens transfer to exact amount of</div>
           <div id="selectedToken" style="margin: 0 4px;"></div>
           <div>to:</div>
         </div>
-        <div id="btcAddresses">
-          <div class="finalise-purchase-block">
-            <div style="border-bottom: 1px solid #FFF; display: flex; padding: 10px 0;">
-              <div style="white-space: nowrap;">BTC Address:</div>
-              <div style="margin: 0 4px;">{{site.btc_address}}</div>
-            </div>
-            <div style="border-bottom: 1px solid #FFF; display: flex; padding: 10px 0;">
-              <div>BTC Amount:</div>
-              <div id="btcAmount"style="margin: 0 4px;"></div>
-            </div>
-            <div style="border-bottom: 1px solid #FFF; display: flex; padding: 10px 0;">
-              <div>USD Amount:</div>
-              <div id="usdAmountResultForBtc" style="margin: 0 4px;"></div>
-            </div>
-          </div>
-          <div style="font-size: 12px; margin-bottom: 20px; margin-top: 10px; font-family: 'Work Sans', sans-serif;">Tokens will be transferred to your account in a few minutes.</div>
-        </div>
-        <div id="eosAddresses">
-          <div class="finalise-purchase-block">
-            <div style="border-bottom: 1px solid #FFF; display: flex; padding: 10px 0;">
-              <div>EOS Address:</div>
-              <div style="margin: 0 4px;">{{site.eos_address}}</div>
-            </div>
-            <div style="border-bottom: 1px solid #FFF; display: flex; padding: 10px 0;">
-              <div>with the memo:</div>
-              <div id="yourAccount" style="margin: 0 4px;"></div>
-            </div>
-            <div style="border-bottom: 1px solid #FFF; display: flex; padding: 10px 0;">
-              <div>EOS Amount:</div>
-              <div id="eosAmount"style="margin: 0 4px;"></div>
-            </div>
-            <div style="border-bottom: 1px solid #FFF; display: flex; padding: 10px 0;">
-              <div>USD Amount:</div>
-              <div id="usdAmountResultForEos" style="margin: 0 4px;"></div>
-            </div>
-          </div>
-          <div style="font-size: 12px; margin-bottom: 20px; margin-top: 10px; font-family: 'Work Sans', sans-serif;">Tokens will be transferred to your account in a few minutes.</div>
-        </div>
+        <div id="requisites"></div>
         {% endif %}
       </div>
     {% endfor %}

@@ -1,10 +1,25 @@
-let currentStep = 1;
+// Global variables
+let paymentMethods = null;
+let currentStepNumber = 1;
+
 let usdAmount = 0
-let btcAmount = 0
-let eosAmount = 0
+
+let calculatedTokens = [];
+
 let selectedToken = "eos"
-let yourAccount = ""
-    
+let accountName = ""
+
+// Initialize
+document.addEventListener("DOMContentLoaded", function(event) {
+  setup()
+  showStep(currentStepNumber);
+});
+
+function setup () {
+  paymentMethods = JSON.parse(document.getElementById('payment-methods').getAttribute('data-methods'))
+}
+
+// Displaying steps logic
 function showStep(step) {
   document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
   document.querySelector(`.step:nth-child(${step})`).classList.add('active');
@@ -25,41 +40,51 @@ function showStep(step) {
 }
 
 function prevStep() {
-  if (currentStep > 1) {
-    currentStep--;
-    showStep(currentStep);
-    document.querySelector(`.dot:nth-child(${currentStep + 1})`).classList.remove('dot--active');
+  if (currentStepNumber > 1) {
+    currentStepNumber--;
+    showStep(currentStepNumber);
+    document.querySelector(`.dot:nth-child(${currentStepNumber + 1})`).classList.remove('dot--active');
   }
 }
 
 function nextStep() {
   const steps = document.getElementById('steps').getAttribute('data-steps');
-  if (currentStep < steps) {
-    currentStep++;
-    showStep(currentStep);
-    document.querySelector(`.dot:nth-child(${currentStep})`).classList.add('dot--active');
+  if (currentStepNumber < steps) {
+    currentStepNumber++;
+    showStep(currentStepNumber);
+    document.querySelector(`.dot:nth-child(${currentStepNumber})`).classList.add('dot--active');
     document.getElementById('usdAmount').innerText = usdAmount;
-    document.getElementById('eosAmount').innerText = eosAmount;
-    document.getElementById('btcAmount').innerText = btcAmount;
     document.getElementById('selectedToken').innerText = selectedToken.toUpperCase();
-    document.getElementById('yourAccount').innerText = document.getElementById('accountName').value;
-    const eosAddresses = document.getElementById('eosAddresses')
-    const btcAddresses = document.getElementById('btcAddresses')
-    if (selectedToken === 'eos') {
-      document.getElementById('usdAmountResultForEos').innerText = usdAmount;
-      btcAddresses.style.display = 'none'
-      eosAddresses.style.display = 'block';
-    } else {
-      document.getElementById('usdAmountResultForBtc').innerText = usdAmount;
-      btcAddresses.style.display = 'block'
-      eosAddresses.style.display = 'none';
+    document.getElementById('accountName').innerText = document.getElementById('accountName').value;
+    if (currentStepNumber === 4) {
+      /// Generate final step
+      const address = paymentMethods.find(item => item.name === selectedToken.toUpperCase()).wallet_address
+      const totalAmount = calculatedTokens.find(item => item.name === selectedToken.toUpperCase()).value
+      const accountName = document.getElementById('accountName').value;
+      document.getElementById('requisites').innerHTML = `
+        <div class="finalise-purchase-block">
+          <div style="border-bottom: 1px solid #FFF; display: flex; padding: 10px 0;">
+            <div style="white-space: nowrap;">${selectedToken.toUpperCase()} Address:</div>
+            <div style="margin: 0 4px;">${address}</div>
+          </div>
+          <div style="border-bottom: 1px solid #FFF; display: flex; padding: 10px 0;">
+            <div>with the memo:</div>
+            <div style="margin: 0 4px;">${accountName}</div>
+          </div>
+          <div style="border-bottom: 1px solid #FFF; display: flex; padding: 10px 0;">
+            <div>${selectedToken.toUpperCase()} Amount:</div>
+            <div style="margin: 0 4px;">${totalAmount}</div>
+          </div>
+          <div style="border-bottom: 1px solid #FFF; display: flex; padding: 10px 0;">
+            <div>USD Amount:</div>
+            <div style="margin: 0 4px;">${usdAmount}</div>
+          </div>
+        </div>
+        <div style="font-size: 12px; margin-bottom: 20px; margin-top: 10px; font-family: 'Work Sans', sans-serif;">Tokens will be transferred to your account in a few minutes.</div>
+      `
     }
   }
 }
-
-document.addEventListener("DOMContentLoaded", function() {
-  showStep(currentStep);
-});
 
 function selectToken(token) {
   document.querySelectorAll('.token-btn').forEach(btn => {
@@ -68,26 +93,27 @@ function selectToken(token) {
 
   const selectedBtn = document.querySelector(`.token-btn[data-token="${token}"]`);
   selectedBtn.classList.add('token-btn--active');
-  selectedToken = token;
+  selectedToken = token.toLowerCase();
   console.log(`Selected token: ${token}`);
 }
 
 function convertTokens() {
   const input = document.getElementById('tokenAmount').value;
-  // Dummy rates
-  const btcRate = 0.0037663;
-  const eosRate = 0.42
-  //
-
-  const eosResult = input * eosRate;
-  const btcResult = input * btcRate;
-  const usdResult = input * 1;
+  const usdResult = input;
 
   usdAmount = usdResult;
-  eosAmount = eosResult;
-  btcAmount = btcResult; 
 
-  document.getElementById('eosResult').innerText = eosResult;
-  document.getElementById('btcResult').innerText = btcResult;
-  document.getElementById('usdResult').innerText = usdResult;
+  paymentMethods.forEach(token => {
+    document.getElementById(`${token.name}Result`).innerText = input * token.rate;
+    if (!calculatedTokens.find(item => item.name === token.name)) {
+      calculatedTokens.push({
+        name: token.name,
+        value: input * token.rate
+      })
+    } else {
+      const currentToken = calculatedTokens.find(item => item.name === token.name)
+      currentToken.value = input * token.rate
+    }
+  })
+  document.getElementById('usdResult').innerText = usdResult || 0;
 }

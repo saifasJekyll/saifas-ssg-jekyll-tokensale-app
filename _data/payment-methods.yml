@@ -1,0 +1,13 @@
+# Payment methods
+- name: EOS
+  wallet_address: eosaddress
+  icon_url: "assets/graphics/images/eos-icon.png"
+  rate: 0.5
+- name: BTC
+  wallet_address: 1flhfbT1PpqaDhFkEFWEf8WUSupnV0y2wP
+  icon_url: "assets/graphics/images/btc-icon.png"
+  rate: 0.042
+- name: ETH
+  wallet_address: 1flhfbT1PpqaDhFkEFWEf8WUSupnV0y2wP
+  icon_url: "https://cdn4.iconfinder.com/data/icons/cryptocoins/227/ETH-alt-512.png"
+  rate: 0.134
